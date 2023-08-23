@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "688633920571",
+    "project_id": "gratis1-2e13a",
+    "storage_bucket": "gratis1-2e13a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:688633920571:android:389891d4c148dd7832b01e",
+        "android_client_info": {
+          "package_name": "com.newgratis"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "688633920571-r8rd2ftk0m13i7stsh9njrku4d9lacrb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8Tx77ihLLL1S0aajkdtY5BCn487Wm6kY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "688633920571-r8rd2ftk0m13i7stsh9njrku4d9lacrb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
