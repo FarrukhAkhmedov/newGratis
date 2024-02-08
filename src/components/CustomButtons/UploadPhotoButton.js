@@ -3,7 +3,7 @@ import { Controller } from "react-hook-form";
 import {View, TouchableOpacity, StyleSheet, Dimensions} from 'react-native'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
-let {width} = Dimensions.get('screen')
+let {width, height} = Dimensions.get('screen')
 
 const UploadPhotoButton = ({rules = {}, control }) =>{
   const {uploadPhotoWrapper} = styles
@@ -29,13 +29,13 @@ const styles = StyleSheet.create(
             backgroundColor:'#e9e9e9',
             borderRadius:10,
             borderColor:'black',
-            borderWidth:1,
+            borderWidth:2,
 
             justifyContent:'center',
             alignItems:'center',
 
             width:width*0.9,
-            height:250,
+            height:height*0.4,
         }
     }
 )

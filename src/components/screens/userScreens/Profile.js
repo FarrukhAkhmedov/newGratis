@@ -1,28 +1,29 @@
-import React from "react";
+import React,{useContext} from "react";
 import {SafeAreaView, StyleSheet, Text, View, Dimensions, Pressable} from 'react-native'
 import { Avatar } from "@rneui/themed";
 import Feather from 'react-native-vector-icons/Feather'
 import Entypo from 'react-native-vector-icons/Entypo'
-import { state } from "../utilites/state";
 import { useNavigation } from "@react-navigation/native";
+import { AuthContext } from "../../context/AuthContext";
 
 let {height} = Dimensions.get('screen')
 
 const Profile = () =>{
-  const navigation = useNavigation()
-  
   const {container, profileImageStyle, nameAndSurname, myAds, iconStyle, wrapperBottom, bottomButtonColumn, bottomIconColumn} = styles
+  const navigation = useNavigation()
+  const {userState} = useContext(AuthContext)
+  console.log(userState.userData);
     return(
         <SafeAreaView style={container}>
           <View style={{alignItems:"center"}}>
-              <Avatar size={100} source={{uri: state.user.avatar}}  rounded icon={{ name: 'user', type: 'feather', color: 'rgb(150,150,150)' }} overlayContainerStyle={iconStyle} containerStyle={profileImageStyle} >
+              <Avatar size={100} rounded icon={{ name: 'user', type: 'feather', color: 'rgb(150,150,150)' }} overlayContainerStyle={iconStyle} containerStyle={profileImageStyle} >
                 <Avatar.Accessory size={35} onPress={()=>navigation.navigate('Editing Profile')}/>
               </Avatar>
-              <Text style={nameAndSurname}>{state.user.name} {state.user.lastName}</Text>
+              <Text style={nameAndSurname}>{userState.userData.userProfileInfo.userName}</Text>
           </View>  
             <View style={wrapperBottom}>
               <View style={bottomIconColumn}>
-                <Feather name='upload' size={25} color={'rgb(150,150,150)'} />
+                <Feather name='list' size={25} color={'rgb(150,150,150)'} />
               </View>
               <Pressable onPress={()=>navigation.navigate('My adds')} style={bottomButtonColumn}>
                 <Text style={myAds}>My active adds</Text>
@@ -33,7 +34,7 @@ const Profile = () =>{
                 <Feather name='map-pin' size={25} color={'rgb(150,150,150)'} />
               </View>
               <View style={bottomButtonColumn}>
-                <Text style={myAds}>{state.user.address.country} {state.user.address.city} {state.user.address.street} {state.user.address.house} {state.user.address.postIndex}</Text>
+                <Text style={myAds}>{userState.userData.userProfileInfo.address}</Text>
               </View>   
             </View>
             <View style={wrapperBottom}>
@@ -41,7 +42,7 @@ const Profile = () =>{
                 <Entypo name='calendar' size={25} color={'rgb(150,150,150)'} />
               </View>
               <View style={bottomButtonColumn}>
-                <Text style={myAds}>On Gratis since</Text>
+                <Text style={myAds}>On Gratis since{userState.userData.userProfileInfo.since}</Text>
               </View>   
             </View>
         </SafeAreaView>
@@ -67,7 +68,7 @@ const styles = StyleSheet.create({
     color:'black',
     fontFamily:'Ubuntu-Medium',
 
-    paddingTop:15,
+    paddingTop:height*0.01,
   },
   myAds:{
     fontSize:18,
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
 
     top:height*0.03,
     justifyContent:'space-evenly',
-    marginVertical:10,
+    marginVertical:height*0.02,
     alignItems:'center'
   },
   bottomIconColumn:{

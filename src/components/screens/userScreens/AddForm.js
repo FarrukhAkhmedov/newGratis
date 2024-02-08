@@ -1,19 +1,20 @@
 import React, {useEffect} from 'react';
 import { StyleSheet, ScrollView,SafeAreaView, View, Button } from 'react-native';
-import UploadPhotoButton from '../CustomButtons/UploadPhotoButton';
-import CustomInputButton from '../CustomButtons/CustomInput';
+import UploadPhotoButton from '../../CustomButtons/UploadPhotoButton';
+import CustomInputButton from '../../CustomButtons/CustomInput';
 import { useForm } from 'react-hook-form';
-import CustomDropList from '../CustomButtons/CustomDropList';
-import Rating from '../CustomButtons/Rating';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import Rating from '../../CustomButtons/Rating';
+import { useRoute } from '@react-navigation/native';
+import CustomMultipleSelect from '../../CustomButtons/CustomMultipleSelect';
+import { objectTypeData } from '../../../Data/DropdawnInput';
 
 
 
 const AddForm = () =>{
   const {container, bottomWrapper } = styles
   const {control, handleSubmit, formState:{errors}, setValue} = useForm()
-  const navigation = useNavigation()
   const route = useRoute()
+
 
   useEffect(()=>{
     setValue('Address', route.params ? route.params.location : '' )
@@ -22,34 +23,22 @@ const AddForm = () =>{
 
 
   const onFormFilled = (data) => {
-
-    navigation.navigate('My adds')
-    setValue('Address', route.params.location)
     console.log(data);
   }
 
-
   
-
-
-  
-
-  const data = [
-    {value:'Phone'},
-    {value:'Book'},
-    {value:'Furneture'},
-    {value:'PC'}
-  ]
 
   return (
     <SafeAreaView style={container}>
       <ScrollView>
         <View style={bottomWrapper}>
-          <UploadPhotoButton
-            control={control}
-          />
+          <View style={{alignItems:'center'}}>
+            <UploadPhotoButton
+              control={control}
+            />
+          </View>
           <Rating
-            name='Quality rating'
+            name='qualityRating'
             control={control}
             reviews={[
               'Needs a serious overhaul',
@@ -64,37 +53,45 @@ const AddForm = () =>{
             ]}
           />
           <CustomInputButton
-            name='Item name'
+            borderWidth = {2}
+            backgroundColor={'#e9e9e9'}
+            name='itemName'
             control={control}
+            keyboardType={'default'}
             placeholder='e.g. Romeo and Juliet by William Shakespeare'
             header='Item name'
             rules={{required:'Item name is required'}}
           />
           <CustomInputButton
-            name='Description'
+            borderWidth = {2}
+            backgroundColor={'#e9e9e9'}
+            name='description'
+            keyboardType={'default'}
             control={control}
             placeholder='Was published in 1597, got some coffe stains...'
             header='Description'
             rules={{required:'Description is required'}}
           />
-          <CustomDropList
-            name='Object type'
+          <CustomMultipleSelect
+            name='objectType'
             control={control}
-            data={data}
+            data={objectTypeData}
             header='Object type'
-            placeholder={'What is it?'}
+            placeholder={'Book'}
             rules={{required:'Object type is required'}}
-
           />
           <CustomInputButton 
+            backgroundColor={'#e9e9e9'}
+            borderWidth = {2}
             name='Address'
+            keyboardType={'default'}
             placeholder={'Street, House'}
             control={control}
             header='Address'
             map={true}
             rules={{required:'Address is required'}}
           />
-          <Button title='Submit form' onPress={handleSubmit(onFormFilled)}/>
+          <Button title='Submit add' onPress={handleSubmit(onFormFilled)}/>
         </View>
       </ScrollView>
     </SafeAreaView>
