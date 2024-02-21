@@ -7,8 +7,7 @@ let {height, width} = Dimensions.get('screen')
 
 const CustomMultipleSelect = ({name, control, data, header, placeholder, rules = {} }) =>{
     const {boxStyles, dropdownItemStyles, dropdownStyles, dropListContainer, headerStyle} = styles
-    const [state, setState] = useState('')
-    
+    const [state, setState] = useState('')    
     return(
         <>
             <Text style={headerStyle}>{header}</Text>
@@ -17,20 +16,20 @@ const CustomMultipleSelect = ({name, control, data, header, placeholder, rules =
                     name={name}
                     control={control}
                     rules={rules}
-                    render={({field:{onChange}, fieldState:{error}})=>(
+                    render={ ({ field: {onChange}, fieldState: {error} } )=>(
                         <>
                             <MultipleSelectList
                                 data={data}
                                 save={'value'}
                                 onSelect={() => onChange(state)}
                                 setSelected={setState}
-                                boxStyles={[boxStyles,{borderColor:error?'red':'black'}]}
+                                boxStyles={[boxStyles, { borderColor: error ? 'red' : 'black'}]}
                                 dropdownTextStyles={dropdownItemStyles}
                                 dropdownStyles={dropdownStyles}
                                 placeholder={placeholder}
                             />
                             {error && (
-                                <Text style={{color:'red', alignSelf:'stretch'}}>{error.message || 'Error'}</Text>
+                                <Text style={{color:'red', alignSelf:'stretch'}}>{ error.message || 'Error' }</Text>
                             )}
                         </>
                     )}

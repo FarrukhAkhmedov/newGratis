@@ -1,11 +1,10 @@
 import React from "react";
-import {StyleSheet, View, } from 'react-native'
 import { AirbnbRating } from '@rneui/themed';
 import { Controller } from "react-hook-form";
 
 const Rating = ({control, name, reviews }) =>{
     return(
-        <View>
+        <>
             <Controller 
                 name={name}
                 control={control}
@@ -21,17 +20,8 @@ const Rating = ({control, name, reviews }) =>{
                     />
                 )}
             />
-            
-        </View>
+        </>
     )
 }
-
-const styles = StyleSheet.create(
-    {
-        container:{
-            flex:1
-        }
-    }
-)
 
 export default Rating

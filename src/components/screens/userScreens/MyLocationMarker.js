@@ -22,7 +22,6 @@ const MyLocationMarker = () =>{
     })
   },[])
 
-  console.log(coords.lat&&coords.lng)
   
   return (
     <SafeAreaView style={container}>

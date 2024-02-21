@@ -2,15 +2,16 @@ import React, { useContext, useEffect, useState } from "react";
 import { useForm } from 'react-hook-form';
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { AuthContext } from "../../context/AuthContext";
-import ProfileInfoForm from "../ProfileInfoForm";
+import ProfileInfoForm from "../../ProfileInfoForm";
+import { observer } from "mobx-react-lite";
 
 const RegisterForm = () =>{
-    const { userState, addInfo} = useContext(AuthContext)
+    const { store } = useContext(AuthContext)
     const { control, setValue, handleSubmit } = useForm( 
         {
-            defaultValues:{
+            defaultValues: {
                 email:'',
-                password:''
+                password:'',
             }
         })
 
@@ -20,27 +21,32 @@ const RegisterForm = () =>{
     const [error, setError] = useState('')
     
     useEffect(()=>{
+        store.resetState()
+    }, [])
+    
+    useEffect(()=>{
         setValue('email', route.params?.email)
         setValue('password', route.params?.password)
     }, [route.params])
 
+
     useEffect(()=>{
-        if (userState.isAuth) {
-        navigation.navigate('Home');
-        } 
-        setError(userState.serverSideError)
-    }, [ userState.serverSideError ])
+        if (store.isAuth) {
+            navigation.navigate('Tabs', {screen: 'Home'});
+        } else {
+            setError(store.serverSideError)
+        }
+    }, [ store.serverSideError || store.isAuth])
 
     const onRegister = (data) => {
         const address = `${data.country}, ${data.city}, ${data.street}`
-        addInfo({
-        userName: data.userName,
-        address,
-        email: data.email,
-        password: data.password
-        })
+        store.addInfo(
+            data.userName,
+            address,
+            data.email,
+            data.password,
+        )
 
-        navigation.navigate('Tabs')
         
     }
     return(
@@ -52,4 +58,4 @@ const RegisterForm = () =>{
     )
 }
 
-export default RegisterForm
+export default observer(RegisterForm)

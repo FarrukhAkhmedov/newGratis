@@ -1,53 +1,65 @@
-import React,{useContext} from "react";
-import {SafeAreaView, StyleSheet, Text, View, Dimensions, Pressable} from 'react-native'
+import React,{useContext, useEffect} from "react";
+import {SafeAreaView, StyleSheet, Text, View, Dimensions, Pressable, Alert} from 'react-native'
 import { Avatar } from "@rneui/themed";
-import Feather from 'react-native-vector-icons/Feather'
-import Entypo from 'react-native-vector-icons/Entypo'
+
 import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../../context/AuthContext";
+import IconButton from "../../CustomButtons/IconButton";
+import IconText from "../../IconText";
+import { API_URL } from "../../context/Api";
+import { observer } from "mobx-react-lite";
+
 
 let {height} = Dimensions.get('screen')
 
 const Profile = () =>{
-  const {container, profileImageStyle, nameAndSurname, myAds, iconStyle, wrapperBottom, bottomButtonColumn, bottomIconColumn} = styles
+  const {container, profileImageStyle, nameAndSurname, iconStyle} = styles
   const navigation = useNavigation()
-  const {userState} = useContext(AuthContext)
-  console.log(userState.userData);
-    return(
-        <SafeAreaView style={container}>
-          <View style={{alignItems:"center"}}>
-              <Avatar size={100} rounded icon={{ name: 'user', type: 'feather', color: 'rgb(150,150,150)' }} overlayContainerStyle={iconStyle} containerStyle={profileImageStyle} >
-                <Avatar.Accessory size={35} onPress={()=>navigation.navigate('Editing Profile')}/>
-              </Avatar>
-              <Text style={nameAndSurname}>{userState.userData.userProfileInfo.userName}</Text>
-          </View>  
-            <View style={wrapperBottom}>
-              <View style={bottomIconColumn}>
-                <Feather name='list' size={25} color={'rgb(150,150,150)'} />
-              </View>
-              <Pressable onPress={()=>navigation.navigate('My adds')} style={bottomButtonColumn}>
-                <Text style={myAds}>My active adds</Text>
-              </Pressable>
-            </View>
-            <View style={wrapperBottom}>
-              <View style={bottomIconColumn}>
-                <Feather name='map-pin' size={25} color={'rgb(150,150,150)'} />
-              </View>
-              <View style={bottomButtonColumn}>
-                <Text style={myAds}>{userState.userData.userProfileInfo.address}</Text>
-              </View>   
-            </View>
-            <View style={wrapperBottom}>
-              <View style={bottomIconColumn}>
-                <Entypo name='calendar' size={25} color={'rgb(150,150,150)'} />
-              </View>
-              <View style={bottomButtonColumn}>
-                <Text style={myAds}>On Gratis since{userState.userData.userProfileInfo.since}</Text>
-              </View>   
-            </View>
-        </SafeAreaView>
-    )
+  const {store} = useContext(AuthContext)
+
+  useEffect(()=>{
+    if(!store.isAuth){
+      navigation.navigate('Landing')
+    }
+  },[store.isAuth])
+
+  
+  const avatarUri =  `${API_URL}/profileImages/${store.userData.userProfileInfo.avatar}` 
+
+  return(
+      <SafeAreaView style={container}>
+        <View style={{alignItems:"center"}}>
+            <Avatar size={100} rounded source={{uri:  avatarUri }} icon={{ name: 'user', type: 'feather', color: 'rgb(150,150,150)' }} overlayContainerStyle={iconStyle} containerStyle={profileImageStyle} >
+              <Avatar.Accessory size={35} onPress={()=>navigation.navigate('Editing Profile')}/>
+            </Avatar>
+            <Text style={nameAndSurname}>{store.userData.userProfileInfo.userName}</Text>
+        </View>
+          <IconButton
+            icon={'list'}
+            text={'My active adds'}
+            size={25}
+            color={'rgb(150,150,150)'}
+            onPress={()=>navigation.navigate('My adds')}
+            textSize={18}
+          />  
+          <IconText
+            icon={'map-pin'}
+            text={store.userData.userProfileInfo.address}
+            size={25}
+            color={'rgb(150,150,150)'}
+            textSize={18}
+          />
+          <IconText
+            icon={'calendar'}
+            text={`On Gratis since ${store.userData.userProfileInfo.since}`}
+            size={25}
+            color={'rgb(150,150,150)'}
+            textSize={18}
+          />
+      </SafeAreaView>
+  )
 }
+
 
 const styles = StyleSheet.create({
   container:{
@@ -69,37 +81,9 @@ const styles = StyleSheet.create({
     fontFamily:'Ubuntu-Medium',
 
     paddingTop:height*0.01,
-  },
-  myAds:{
-    fontSize:18,
-    color:'rgb(150,150,150)',
-    fontFamily: 'Ubuntu-Medium',
-
-    alignSelf:'stretch'
-  }, 
-  wrapperBottom:{
-    flexDirection:'row',
-
-    top:height*0.03,
-    justifyContent:'space-evenly',
-    marginVertical:height*0.02,
-    alignItems:'center'
-  },
-  bottomIconColumn:{
-    flex:1,
-
-    flexDirection:'column',
-    alignItems:'center'
-  },
-  bottomButtonColumn:{
-    flex:3,
-    
-    flexDirection:'column',
-    alignItems:'stretch'
   }
-
 })
 
 
 
-export default Profile
+export default observer(Profile)

@@ -100,6 +100,7 @@ android {
     defaultConfig {
         applicationId "com.newgratis"
         minSdkVersion rootProject.ext.minSdkVersion
+        vectorDrawables.useSupportLibrary = true
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"

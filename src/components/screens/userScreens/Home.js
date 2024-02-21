@@ -8,7 +8,9 @@ import { useForm } from 'react-hook-form'
 import CustomInputButton from '../../CustomButtons/CustomInput'
 import { AuthContext } from '../../context/AuthContext'
 import CustomDropList from '../../CustomButtons/CustomDropList'
-import NewAddlist from '../listItems/NewAddList'
+import NewAddlist from '../../listItems/NewAddList'
+import { objectTypeData } from '../../../Data/DATA'
+import { observer } from 'mobx-react-lite'
 
 let { height, width } = Dimensions.get('screen')
 
@@ -16,7 +18,7 @@ const Home = () => {
     const {container, upperContainer, bottomContainer, searchStyle, filterStyle, topBar, filterUpperContainer, titleStyle} = styles
     const [search, setSearch] = useState('')
     const [modalVisible, setModalVisible] = useState(false)
-    const {userState} = useContext(AuthContext)
+    const {store} = useContext(AuthContext)
     const {control, handleSubmit, setValue} = useForm({
         defaultValues: {
             categorie:'',
@@ -27,12 +29,11 @@ const Home = () => {
     const [checked, setChecked] = useState(0)
 
     const submitForm = (data) =>{
-        console.log(data)
         setModalVisible(!modalVisible)
         setChecked(0)
     }
 
-    if (userState.isLoading){
+    if (store.isLoading){
         <View>
             <ActivityIndicator size={height * 0.1} color={'blue'}/>
         </View>
@@ -49,12 +50,7 @@ const Home = () => {
         {id:'8', name:'bible', image:'https://img3.labirint.ru/rc/b12f7844dde09dd7b7fe35425d2c9c11/363x561q80/books47/468967/cover.jpg?1628080127', date:'1680422721', objectType:'book', description: 'Holly shit', address:'20.516242', rating:8}
     ]
 
-    const data = [
-        {value:'Phone'},
-        {value:'Book'},
-        {value:'Furneture'},
-        {value:'PC'}
-    ]
+   
 
     const qualityData = [
         {value:'Needs a serious overhaul'},
@@ -113,7 +109,7 @@ const Home = () => {
                                 name={'categorie'}
                                 placeholder={'Choose one of the following categories...'}
                                 header={'All categories'}
-                                data={data}
+                                data={objectTypeData}
                                 backgroundColor={'#f0f9ff'}
                                 borderWidth={1}
                             />
@@ -176,17 +172,17 @@ const Home = () => {
                         </View>
                     </Modal>
                 </View>
-                <Text style={{ fontSize:25, color:'black', fontWeight:'bold', paddingLeft:width * 0.05, paddingTop:height*0.03}}>May be interesting for You</Text>
+                <Text style={{ fontSize:25, color:'black', fontWeight:'bold', paddingLeft: width * 0.05, paddingTop: height*0.03}}>May be interesting for You</Text>
             </View>
             <View style={bottomContainer}>
                 <FlatList
-                data={Data}
-                renderItem={renderItem}
-                keyExtractor={item => item.id}
-                contentContainerStyle={{ alignSelf:'center', justifyContent:'space-around' }}
-                numColumns={2}
-                showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}
+                    data={Data}
+                    renderItem={renderItem}
+                    keyExtractor={item => item.id}
+                    contentContainerStyle={{ alignSelf:'center', justifyContent:'space-around' }}
+                    numColumns={2}
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}
                 />
             </View>
         </SafeAreaView>
@@ -248,4 +244,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default Home
+export default observer(Home)

@@ -5,6 +5,7 @@ import CustomInputButton from "../../CustomButtons/CustomInput";
 import { useForm } from 'react-hook-form'
 import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../../context/AuthContext";
+import { observer } from 'mobx-react-lite'
 
 
 let { height, width } = Dimensions.get('screen');
@@ -13,31 +14,31 @@ const Landing = () => {
     const {container, table, buttonWrapper, inputWrapper, buttonStyle } = styles
     const {control, handleSubmit} = useForm()
     const navigation = useNavigation()
-    const {login, userState } = useContext(AuthContext)
-    const [error, setError] = useState()
+    const { store } = useContext(AuthContext)
+    const [error, setError] = useState('')
 
     const onLogin = (data) => {
-        login({
-            email: data.email,
-            password: data.password
-        })
+        store.login(
+            data.email,
+            data.password
+        )
     }
 
     useEffect(()=>{
-        setError('')
-    }, [] )
+        store.resetState()
+    }, [])
     
     useEffect(()=>{
-        if (userState.isAuth){
-            navigation.navigate({name:'Tabs'})
+        if (store.isAuth){
+            navigation.navigate({ name: 'Tabs' })
         } else {
-            setError(userState.serverSideError)
+            setError(store.serverSideError)
         }
-    }, [userState.isAuth || userState.serverSideError])
+    }, [store.isAuth || store.serverSideError])
     
-    if (userState.isLoading){
+    if (store.isLoading){
         return(
-            <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
+            <View style={{ flex:1, justifyContent: 'center', alignItems:'center' }}>
                 <ActivityIndicator size={height * 0.1} color={'blue'}/>
             </View>
         )
@@ -125,4 +126,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default Landing
+export default observer(Landing)

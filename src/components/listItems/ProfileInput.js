@@ -37,7 +37,6 @@ const ProfileInput = (props) => {
 const styles = StyleSheet.create({
     userName:{
         fontSize:13,
-        fontFamily:'Ubuntu-Medium',
         color:'black',
 
         marginLeft: width * 0.03
@@ -53,7 +52,7 @@ const styles = StyleSheet.create({
         
     },
     textInputContainerStyle:{
-        backgroundColor:'#f0f9ff',
+        backgroundColor:'transparent',
         zIndex:0,
         
         borderWidth:2,

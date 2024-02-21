@@ -1,32 +1,42 @@
-import React, { useContext, useState } from "react";
-import { useForm } from 'react-hook-form';
-import { useNavigation } from "@react-navigation/native";
-import { AuthContext } from "../../context/AuthContext";
-import ProfileInfoForm from "../ProfileInfoForm";
+import React, { useContext, } from "react"
+import {View, StyleSheet} from 'react-native'
+import { useForm } from 'react-hook-form'
+import { useNavigation } from "@react-navigation/native"
+import { AuthContext } from "../../context/AuthContext"
+import ProfileInfoForm from "../../ProfileInfoForm"
+import { observer } from "mobx-react-lite"
 
 const EditProfile = () => {
+  const {container} = styles
   const { control, handleSubmit } = useForm();
   const navigation = useNavigation();
-  const {userState, editProfileInfo } = useContext(AuthContext)
-  const [error, setError] = useState('')
-
+  const {store} = useContext(AuthContext)
+  
   const onEditProfile = (data) => {
     const address = `${data.country}, ${data.city}, ${data.street}`
-    editProfileInfo({
-      address: address,
-      userName: data.userName
-    })
-
+    store.editProfileInfo(
+      data.userName,
+      address
+    )
     navigation.navigate('Profile')
   };
 
+
   return (
-    <ProfileInfoForm
-      control={control}
-      onSubmit={handleSubmit(onEditProfile)}
-      error={error}
-    />
+    <View style={container}>
+      <ProfileInfoForm
+        control={control}
+        onSubmit={handleSubmit(onEditProfile)}
+      />
+    </View>
+
   );
 };
 
-export default EditProfile
+const styles = StyleSheet.create({
+  container:{
+    flex:1
+  }
+})
+
+export default observer(EditProfile)

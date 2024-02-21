@@ -4,6 +4,7 @@ import Tabs from './Tabs';
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from '@react-navigation/native';
 import { AuthContext } from '../context/AuthContext'
+import {observer} from 'mobx-react-lite'
 
 import MyLocationMarker from '../screens/userScreens/MyLocationMarker';
 import EditProfile from '../screens/userScreens/EditProfile';
@@ -12,7 +13,6 @@ import FullSizeAdd from '../screens/userScreens/FullSizeAdd';
 import Landing from '../screens/register/Landing';
 import RegisterForm from '../screens/register/RegisterForm';
 import Email from '../screens/register/Email';
-import EncryptedStorage from 'react-native-encrypted-storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -20,7 +20,7 @@ const Stack = createStackNavigator()
 
 
 const Navigation = () => {
-  const {userState, checkAuth} = useContext(AuthContext)
+  const {store} = useContext(AuthContext)
 
   const checkUserAccessToken = async () =>{
     const userAccessToken = await AsyncStorage.getItem('userAccessToken')
@@ -32,13 +32,14 @@ const Navigation = () => {
   
   useEffect( () => {
     if (checkUserAccessToken()){
-      checkAuth()
+      store.checkAuth()
     }
   }, [])
 
+  
   return(
     <NavigationContainer>
-      <Stack.Navigator initialRouteName = { userState.isAuth  ? 'Home' : 'Landing' } >
+      <Stack.Navigator initialRouteName = { store.isAuth ? 'Home' : 'Landing' } >
         <Stack.Screen
           name='Tabs'
           component={Tabs}
@@ -66,7 +67,7 @@ const Navigation = () => {
           component={RegisterForm}
           options={{
             headerShown: false,
-            headerStyle:{backgroundColor:'#f0f9ff'},
+            headerStyle: {backgroundColor:'#f0f9ff'},
           }}
         />
         <Stack.Screen 
@@ -80,13 +81,14 @@ const Navigation = () => {
           name='Editing Profile'
           component={EditProfile}
           options={{
-            headerTitleAlign:'center',
+            headerShown: false,
           }}
         />
         <Stack.Screen
           name='My adds'
           component={MyAdds}
           options={{
+            headerShadowVisible:false,
             headerStyle:{backgroundColor:'#f0f8ff'},
             headerTitleAlign:'center'
           }}
@@ -95,6 +97,7 @@ const Navigation = () => {
           name='Full size add'
           component={FullSizeAdd}
           options={{
+            headerShadowVisible:false,
             headerStyle:{backgroundColor:'#f0f8ff'},
             title:''
           }}
@@ -108,4 +111,4 @@ const Navigation = () => {
   
   
   
-export default Navigation
+export default observer(Navigation)

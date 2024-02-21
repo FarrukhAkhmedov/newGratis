@@ -5,8 +5,7 @@ import CustomInputButton from "../../CustomButtons/CustomInput";
 import { useForm } from 'react-hook-form'
 import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../../context/AuthContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { observer } from "mobx-react-lite";
 
 let { height, width } = Dimensions.get('screen');
 
@@ -14,30 +13,30 @@ const Email = () => {
     const {container, table, buttonWrapper, inputWrapper, buttonStyle } = styles
     const {control, handleSubmit} = useForm()
     const navigation = useNavigation()
-    const [error, setError] = useState()
+    const [error, setError] = useState(null)
     const [emailData, setEmailData] = useState(null)
-    const {register, userState} = useContext(AuthContext)
+    const { store } = useContext(AuthContext)
     
     useEffect(()=>{
-        setError('')
+        store.resetState()
     }, [])
 
     useEffect(()=>{
-        setError(userState.serverSideError)
-    }, [userState.serverSideError])
+        setError(store.serverSideError)
+    }, [store.serverSideError])
 
     useEffect(() =>{
-        if (emailData){
+        if (store.isEmailValid){
             navigation.navigate({name: 'Register', params: {email: emailData.email, password: emailData.password}})
         }
-    }, [emailData])
+    }, [store.isEmailValid ])
 
     
     const onEmail = (data) => {
         console.log(data);
-        register({
-            email: data?.email,
-        })
+        store.register(
+            data.email
+        )
         const isValid = validation(data)
         if (isValid){
             setEmailData(data)
@@ -48,7 +47,7 @@ const Email = () => {
         const regExp = /(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,}/
         if(data.repeatPassword === data.password){
             if (regExp.test(data.password)){
-                return userState.isEmailValid
+                return true
             } else {
                 setError('Password must contain minimum 6 letters, at least one capital letter and number ')
                 return false
@@ -63,7 +62,7 @@ const Email = () => {
     
 
 
-    if (userState.isLoading){
+    if (store.isLoading){
         return(
             <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
                 <ActivityIndicator size={height * 0.1} color={'blue'}/>
@@ -155,4 +154,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default Email
+export default observer(Email)
