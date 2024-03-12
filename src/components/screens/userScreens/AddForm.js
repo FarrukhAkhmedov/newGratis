@@ -1,35 +1,57 @@
-import React, { useContext, useEffect} from 'react';
-import { StyleSheet, ScrollView,SafeAreaView, View, Pressable} from 'react-native';
+import React, { useContext, useEffect, useState} from 'react';
+import { StyleSheet, ScrollView, SafeAreaView, View, Button, Pressable } from 'react-native';
 import UploadPhotoButton from '../../CustomButtons/UploadPhotoButton';
 import CustomInputButton from '../../CustomButtons/CustomInput';
 import { useForm } from 'react-hook-form';
 import Rating from '../../CustomButtons/Rating';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import CustomMultipleSelect from '../../CustomButtons/CustomMultipleSelect';
 import { objectTypeData, ratingData } from '../../../Data/DATA';
 import BottomSheet from '../../Animated/BottomSheet';
 import { AuthContext } from '../../context/AuthContext';
 import {observer} from 'mobx-react-lite' 
-import { Button } from '@rneui/base';
 
 
 
 
-const AddForm = () =>{
+const AddForm = () => {
   const {container, bottomWrapper, overlay } = styles
-  const {control, handleSubmit, setValue} = useForm({
-    address: ''
-  })
-  const {userStore, store} = useContext(AuthContext)
+  const {control, handleSubmit, setValue} = useForm({defaultValues:{
+    address:'',
+    photo:{},
+    qualityRating:1
+  }})
+  const [image, setImage] = useState({})
+  const {postStore} = useContext(AuthContext)
+  const navigation = useNavigation()
   const route = useRoute()
 
+
   useEffect(()=>{
-    setValue('address', route.params ? route.params.location : '' )
+    setValue('address', route.params?.location)
   },[route.params?.location])
 
+  useEffect(()=>{
+    setValue('photo', {...image})
+  },[image])
 
-  const onFormFilled = (data) => {
-    console.log(data);
+  const handleImageSelect = (image) =>{
+    setImage(image)
+  }
+
+
+
+
+  const onAddSubmit = (data) =>{
+    postStore.createPost(
+      data.address,
+      data.description,
+      data.itemName,
+      data.objectType,
+      data.qualityRating,
+      data.photo
+    )
+    navigation.navigate({name: 'Tabs'})
   }
 
   
@@ -41,8 +63,8 @@ const AddForm = () =>{
           <View style={{ alignItems: 'center'}}>
             <UploadPhotoButton
               control={control}
-              rules={{required:'Photo is required'}}
-              image={store.image.path}
+              rules={{required: 'Photo is required'}}
+              image = {image}
             />
           </View>
           <Rating
@@ -81,7 +103,7 @@ const AddForm = () =>{
           <CustomInputButton 
             backgroundColor={'#e9e9e9'}
             borderWidth = {2}
-            name='Address'
+            name='address'
             keyboardType={'default'}
             placeholder={'Street, House'}
             control={control}
@@ -89,12 +111,13 @@ const AddForm = () =>{
             map={true}
             rules={{required:'Address is required'}}
           />
-          <Button title='Submit add' onPress={handleSubmit(onFormFilled)}/>
+          <Button title='Submit add' onPress={handleSubmit(onAddSubmit)}/>
         </View>
-        <Pressable onPress={() => userStore.bottomSheetClose()} style={[ overlay ,{display: userStore.isBottomVisible ? 'flex' : 'none'}]}/>
+        <Pressable onPress={() => postStore.bottomSheetClose()} style={[ overlay , {display: postStore.isBottomVisible ? 'flex' : 'none'}]}/>
       </ScrollView>
       <BottomSheet
-        isVisible={userStore.isBottomVisible}
+        isVisible={postStore.isBottomVisible}
+        imageSelect={handleImageSelect}
       />
     </SafeAreaView>
   )
@@ -119,6 +142,7 @@ const styles = StyleSheet.create(
     overlay:{
       ...StyleSheet.absoluteFill,
       backgroundColor: 'rgba(0, 0, 0, 0.5)'
+
     }
   }
 )

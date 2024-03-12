@@ -6,7 +6,7 @@ import ProfileInfoForm from "../../ProfileInfoForm";
 import { observer } from "mobx-react-lite";
 
 const RegisterForm = () =>{
-    const { store } = useContext(AuthContext)
+    const { authStore } = useContext(AuthContext)
     const { control, setValue, handleSubmit } = useForm( 
         {
             defaultValues: {
@@ -21,7 +21,7 @@ const RegisterForm = () =>{
     const [error, setError] = useState('')
     
     useEffect(()=>{
-        store.resetState()
+        authStore.resetState()
     }, [])
     
     useEffect(()=>{
@@ -31,16 +31,16 @@ const RegisterForm = () =>{
 
 
     useEffect(()=>{
-        if (store.isAuth) {
+        if (authStore.isAuth) {
             navigation.navigate('Tabs', {screen: 'Home'});
         } else {
-            setError(store.serverSideError)
+            setError(authStore.serverSideError)
         }
-    }, [ store.serverSideError || store.isAuth])
+    }, [ authStore.serverSideError || authStore.isAuth])
 
     const onRegister = (data) => {
         const address = `${data.country}, ${data.city}, ${data.street}`
-        store.addInfo(
+        authStore.addInfo(
             data.userName,
             address,
             data.email,

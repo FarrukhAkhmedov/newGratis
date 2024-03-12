@@ -1,16 +1,15 @@
-import React, {createContext} from "react"
-import Store from "../Store/store"
-import UserStore from "../Store/userStore"
+import React, { createContext } from "react";
+import AuthStore from "../Store/authStore";
+import PostStore from "../Store/postStore";
 
+export const AuthContext = createContext();
 
-export const AuthContext = createContext()
-
-export const AuthProvider = ({children}) => {
-    const userStore = new UserStore()
-    const store = new Store()
-    return(
-        <AuthContext.Provider value={{store, userStore}} >
+export const AuthProvider = ({ children }) => {
+    const authStore = new AuthStore();
+    const postStore = new PostStore();
+    return (
+        <AuthContext.Provider value={{ authStore, postStore }}>
             {children}
         </AuthContext.Provider>
-    )
-}
+    );
+};

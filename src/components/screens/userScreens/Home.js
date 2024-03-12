@@ -1,5 +1,5 @@
-import React, {useState, useContext} from 'react'
-import { SafeAreaView, Text, View,  StyleSheet, TouchableOpacity, Dimensions, TextInput, Modal, FlatList, ActivityIndicator } from 'react-native'
+import React, {useState, useContext, useEffect, useMemo} from 'react'
+import { SafeAreaView, Text, View,  StyleSheet, TouchableOpacity, Dimensions, TextInput, Modal, FlatList, ActivityIndicator, BackHandler } from 'react-native'
 import { CheckBox } from '@rneui/base'
 import Octicons from 'react-native-vector-icons/Octicons'
 import Feather from 'react-native-vector-icons/Feather'
@@ -9,7 +9,7 @@ import CustomInputButton from '../../CustomButtons/CustomInput'
 import { AuthContext } from '../../context/AuthContext'
 import CustomDropList from '../../CustomButtons/CustomDropList'
 import NewAddlist from '../../listItems/NewAddList'
-import { objectTypeData } from '../../../Data/DATA'
+import { objectTypeData, ratingData } from '../../../Data/DATA'
 import { observer } from 'mobx-react-lite'
 
 let { height, width } = Dimensions.get('screen')
@@ -18,7 +18,8 @@ const Home = () => {
     const {container, upperContainer, bottomContainer, searchStyle, filterStyle, topBar, filterUpperContainer, titleStyle} = styles
     const [search, setSearch] = useState('')
     const [modalVisible, setModalVisible] = useState(false)
-    const {store} = useContext(AuthContext)
+    const [Data, setData] = useState()
+    const {postStore} = useContext(AuthContext)
     const {control, handleSubmit, setValue} = useForm({
         defaultValues: {
             categorie:'',
@@ -33,40 +34,33 @@ const Home = () => {
         setChecked(0)
     }
 
-    if (store.isLoading){
-        <View>
-            <ActivityIndicator size={height * 0.1} color={'blue'}/>
-        </View>
-    }
+    useEffect(() =>{
+        const fetchData = async () => {
+            try {
+                await postStore.getPosts();
+                setData([...postStore.allPosts]);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
 
-    const Data = [
-        {id:'1', name:'knife', image:"https://upload.wikimedia.org/wikipedia/commons/3/33/Damascus_Bowie.jpg", date:'1696925121', objectType:'instrument', description:"That's how I got theese scars", address:'Moscow, Udaltsova 4', rating:4},
-        {id:'2', name:'wardrobe', image:'https://www.ikea.com/ch/en/images/products/kleppstad-wardrobe-with-2-doors-white__0733323_pe748780_s5.jpg', date:'054281921', objectType:'furneture', description:'Get out of the closet', address:'20.520126', rating:5},
-        {id:'3', name:'table', image:'https://www.futoncompany.co.uk/images/detailed/72/Oak-Console-Table-100cm-_4__3rb3-m4.jpg', date:'1367309121', objectType:'furneture', description:'Just regular table', address:'13.41165685918645', rating:6},
-        {id:'4', name:'bible', image:'https://img3.labirint.ru/rc/b12f7844dde09dd7b7fe35425d2c9c11/363x561q80/books47/468967/cover.jpg?1628080127', date:'1680422721', objectType:'book', description: 'Holly shit', address:'20.516242', rating:8},
-        {id:'5', name:'knife', image:"https://upload.wikimedia.org/wikipedia/commons/3/33/Damascus_Bowie.jpg", date:'1696925121', objectType:'instrument', description:"That's how I got theese scars", address:'20.525094', rating:4},
-        {id:'6', name:'wardrobe', image:'https://www.ikea.com/ch/en/images/products/kleppstad-wardrobe-with-2-doors-white__0733323_pe748780_s5.jpg', date:'054281921', objectType:'furneture', description:'Get out of the closet', address:'20.520126', rating:5},
-        {id:'7', name:'table', image:'https://www.futoncompany.co.uk/images/detailed/72/Oak-Console-Table-100cm-_4__3rb3-m4.jpg', date:'1367309121', objectType:'furneture', description:'Just regular table', address:'20.519236', rating:6},
-        {id:'8', name:'bible', image:'https://img3.labirint.ru/rc/b12f7844dde09dd7b7fe35425d2c9c11/363x561q80/books47/468967/cover.jpg?1628080127', date:'1680422721', objectType:'book', description: 'Holly shit', address:'20.516242', rating:8}
-    ]
+        fetchData();
+    }, []);
 
-   
-
-    const qualityData = [
-        {value:'Needs a serious overhaul'},
-        {value:"Got major defects, that affect performance"},
-        {value:'Needs a small repair '},
-        {value:"Got major defects, that don't affect performance"} ,
-        {value:'Usable'},
-        {value:'Got minor visible deffects '},
-        {value: 'Got minor barely visible defects'}, 
-        {value:'Was used only once'}, 
-        {value:'Was never used!'} 
-    ]
-
-    const renderItem = ({item}) =>(
-        <NewAddlist source={item.image} text={item.name} id={item.id} date={item.data} description={item.description} address={item.address} rating={item.rating} />
-    )
+    const renderItem = useMemo(() => {
+        return ({ item, index }) => (
+            <NewAddlist 
+                source={item.photo} 
+                text={item.itemName} 
+                data={item.data} 
+                description={item.description} 
+                address={item.address} 
+                rating={item.rating} 
+                id={item.post_id.toString()}
+                index={index}
+            />
+        );
+    }, [Data]);
 
     return(
         <SafeAreaView style={container}>
@@ -118,7 +112,7 @@ const Home = () => {
                                 name={'quality'}
                                 placeholder={'What quality would be acceptable for You...'}
                                 header={'Minimum quality'}
-                                data={qualityData}
+                                data={ratingData}
                                 backgroundColor={'#f0f9ff'}
                                 borderWidth={1}
                             />
@@ -178,11 +172,11 @@ const Home = () => {
                 <FlatList
                     data={Data}
                     renderItem={renderItem}
-                    keyExtractor={item => item.id}
                     contentContainerStyle={{ alignSelf:'center', justifyContent:'space-around' }}
                     numColumns={2}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
+                    ListEmptyComponent={<ActivityIndicator/>}
                 />
             </View>
         </SafeAreaView>

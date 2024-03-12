@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import Navigation from './src/components/Navigation/Navigation';
 import { AuthProvider } from './src/components/context/AuthContext';
-import BottomSheet from './src/components/Animated/BottomSheet';
 
 
 const App = () =>{
   return (
     <AuthProvider>
-      <Navigation/>
+      <Suspense>
+        <Navigation/>
+      </Suspense>
     </AuthProvider>
   )
 }

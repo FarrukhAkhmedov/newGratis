@@ -1,26 +1,28 @@
-import React, {useContext, useEffect} from 'react';
-import Tabs from './Tabs';
+import React, {useContext, useEffect, lazy} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from '@react-navigation/native';
 import { AuthContext } from '../context/AuthContext'
 import {observer} from 'mobx-react-lite'
+import { createSharedElementStackNavigator } from 'react-navigation-shared-element'
 
-import MyLocationMarker from '../screens/userScreens/MyLocationMarker';
-import EditProfile from '../screens/userScreens/EditProfile';
-import MyAdds from '../screens/userScreens/MyAdds';
-import FullSizeAdd from '../screens/userScreens/FullSizeAdd';
+const MyLocationMarker = lazy(() => import('../screens/userScreens/MyLocationMarker'))
+const EditProfile = lazy(() => import('../screens/userScreens/EditProfile'))
+const MyAdds = lazy(() => import('../screens/userScreens/MyAdds'))
+const FullSizeAdd = lazy(() => import('../screens/userScreens/FullSizeAdd'))
+const RegisterForm = lazy(() => import('../screens/register/RegisterForm'))
 import Landing from '../screens/register/Landing';
-import RegisterForm from '../screens/register/RegisterForm';
-import Email from '../screens/register/Email';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+const Email = lazy(() => import('../screens/register/Email'))
+import Tabs from './Tabs'
 
 
-const Stack = createStackNavigator()
+
+
+const Stack = createSharedElementStackNavigator()
 
 
 const Navigation = () => {
-  const {store} = useContext(AuthContext)
+  const {authStore} = useContext(AuthContext)
 
   const checkUserAccessToken = async () =>{
     const userAccessToken = await AsyncStorage.getItem('userAccessToken')
@@ -32,21 +34,14 @@ const Navigation = () => {
   
   useEffect( () => {
     if (checkUserAccessToken()){
-      store.checkAuth()
+      authStore.checkAuth()
     }
   }, [])
 
   
   return(
     <NavigationContainer>
-      <Stack.Navigator initialRouteName = { store.isAuth ? 'Home' : 'Landing' } >
-        <Stack.Screen
-          name='Tabs'
-          component={Tabs}
-          options={{
-            headerShown:false
-          }}
-        />
+      <Stack.Navigator initialRouteName = { authStore.isAuth ? 'Home' : 'Landing' } >
         <Stack.Screen
           name = 'Landing'
           component={Landing}
@@ -60,7 +55,6 @@ const Navigation = () => {
           options={{
             headerShown:false
           }}
-
         />
         <Stack.Screen
           name={'Register'}
@@ -68,6 +62,13 @@ const Navigation = () => {
           options={{
             headerShown: false,
             headerStyle: {backgroundColor:'#f0f9ff'},
+          }}
+        />
+        <Stack.Screen
+          name='Tabs'
+          component={Tabs}
+          options={{
+            headerShown:false
           }}
         />
         <Stack.Screen 
@@ -97,9 +98,13 @@ const Navigation = () => {
           name='Full size add'
           component={FullSizeAdd}
           options={{
-            headerShadowVisible:false,
+            headerShown:false,
             headerStyle:{backgroundColor:'#f0f8ff'},
             title:''
+          }}
+          sharedElements={(route) => {
+            const { id } = route.params;
+            return [{ id }];
           }}
         />
       </Stack.Navigator>

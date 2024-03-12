@@ -3,7 +3,7 @@ import {SafeAreaView, StyleSheet, View, Dimensions, Text, ActivityIndicator} fro
 import {Button} from '@rneui/base'
 import CustomInputButton from "../../CustomButtons/CustomInput";
 import { useForm } from 'react-hook-form'
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, StackActions } from "@react-navigation/native";
 import { AuthContext } from "../../context/AuthContext";
 import { observer } from 'mobx-react-lite'
 
@@ -14,29 +14,31 @@ const Landing = () => {
     const {container, table, buttonWrapper, inputWrapper, buttonStyle } = styles
     const {control, handleSubmit} = useForm()
     const navigation = useNavigation()
-    const { store } = useContext(AuthContext)
+    const { authStore } = useContext(AuthContext)
     const [error, setError] = useState('')
 
     const onLogin = (data) => {
-        store.login(
+        authStore.login(
             data.email,
             data.password
         )
     }
 
     useEffect(()=>{
-        store.resetState()
+        authStore.resetState()
     }, [])
     
     useEffect(()=>{
-        if (store.isAuth){
-            navigation.navigate({ name: 'Tabs' })
+        if (authStore.isAuth){
+            navigation.dispatch(
+                StackActions.replace('Tabs')
+            )
         } else {
-            setError(store.serverSideError)
+            setError(authStore.serverSideError)
         }
-    }, [store.isAuth || store.serverSideError])
+    }, [authStore.isAuth || authStore.serverSideError])
     
-    if (store.isLoading){
+    if (authStore.isLoading){
         return(
             <View style={{ flex:1, justifyContent: 'center', alignItems:'center' }}>
                 <ActivityIndicator size={height * 0.1} color={'blue'}/>

@@ -1,3 +1,5 @@
+import { useNavigation } from "@react-navigation/native"
+
 export const withProfileInfo = (WrappedComponent) =>{
     return({onSubmit, error, control, setAvatar}) => {
       return(
@@ -24,5 +26,33 @@ export const withCustomDropList = (WrappedComponent) =>{
           />
       )
 
+  }
+}
+
+export const withNewAddList = (WrappedComponent) =>{
+  return ({likeButton, }) =>{
+
+  }
+
+}
+
+export const withCustomInputButton = (WrappedComponent) =>{
+  return ({control, placeholder, name, header, map = {}, rules = {}, backgroundColor = {}, keyboardType = {}, secureTextEntry , borderWidth}) => {
+      const navigation = useNavigation()
+      return (
+          <WrappedComponent
+              control = {control}
+              placeholder = {placeholder}
+              name = {name}
+              header = {header}
+              map = {map}
+              rules = {rules}
+              backgroundColor = {backgroundColor}
+              keyboardType = {keyboardType}
+              secureTextEntry = {secureTextEntry}
+              borderWidth = {borderWidth}
+              navigation = {navigation}
+          />
+      )
   }
 }

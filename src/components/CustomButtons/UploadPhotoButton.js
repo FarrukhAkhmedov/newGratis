@@ -6,20 +6,20 @@ import { AuthContext } from "../context/AuthContext";
 
 let {width, height} = Dimensions.get('window')
 
-const UploadPhotoButton = ({rules = {}, control, image }) => {
+const UploadPhotoButton = ({rules = {}, control }) => {
   const {uploadPhotoWrapper, imageStyle} = styles
-  const {userStore} = useContext(AuthContext)
+  const {postStore} = useContext(AuthContext)
 
   return(
     <View>
       <Controller
-        name="Photo"
+        name="photo"
         control={control}
         rules={rules}
-        render={({field: {}, fieldState: {error} })=>(
-          <TouchableOpacity onPress={ () => userStore.bottomSheetOpen() } style={[ uploadPhotoWrapper, { borderColor: error ? 'red' : 'black'}]}>
-            <Image source={{ uri: image}} style={imageStyle}/> 
-            <MaterialIcons name='add-a-photo' size={30} style={{display: image ? 'none': 'flex'}}/>
+        render={({field: {value}, fieldState: {error} })=>(
+          <TouchableOpacity onPress={ () => postStore.bottomSheetOpen()} style={[ uploadPhotoWrapper, { borderColor: error ? 'red' : 'black'}]}>
+            <Image source={{ uri: value.path}} style={imageStyle}/> 
+            <MaterialIcons name='add-a-photo' size={30} style={{display: value.path ? 'none': 'flex'}}/>
           </TouchableOpacity>
         )}/>
     </View>

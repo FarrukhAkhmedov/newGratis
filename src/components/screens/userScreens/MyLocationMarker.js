@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, Button, LogBox } from 'react-native';
-import { LeafletView, AnimationType, INFINITE_ANIMATION_ITERATIONS } from 'react-native-leaflet-view';
+import { LeafletView } from 'react-native-leaflet-view';
 import Geolocation from '@react-native-community/geolocation';
 import {useNavigation} from '@react-navigation/native'
 
@@ -11,8 +11,6 @@ const MyLocationMarker = () =>{
   const [centerMapCoords, setCenterMapCoords] = useState({})
   const [coords, setCoords] = useState({})
   const navigation = useNavigation()
-
-  
   
   
   useEffect (() => {

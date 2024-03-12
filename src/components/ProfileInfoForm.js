@@ -14,7 +14,7 @@ let { height, width } = Dimensions.get('screen')
 const ProfileInfoForm = (props) =>{
   const { container, upperContainer, iconStyle, bottomContainer, headerStyle, overlay } = styles
   const { control, onSubmit } = props
-  const {store} = useContext(AuthContext)
+  const {authStore} = useContext(AuthContext)
   const [bottomVisible, setBottomVisible] = useState(false)
 
 
@@ -27,6 +27,10 @@ const ProfileInfoForm = (props) =>{
     setBottomVisible(!bottomVisible)
   }
 
+  const handleImageSelect = (image) =>{
+    authStore.setImage(image)
+  }
+
   const renderItem = ({item}) =>(
     <ProfileInput name={item.name} control={control} header={item.header} placeholder={item.placeholder} rules={{required:'Field'}}/>
   )
@@ -37,7 +41,7 @@ const ProfileInfoForm = (props) =>{
         <Avatar
           size={90}
           rounded
-          source={{uri: store.image.path ? store.image.path : `${API_URL}/profileImages/${store.userData.userProfileInfo.avatar}`}}
+          source={{uri: authStore.image.path ? authStore.image.path : `${API_URL}/profileImages/${authStore.userData.userProfileInfo.avatar}`}}
           icon={{ name: 'user', type: 'feather', color: 'rgb(150,150,150)' }}
           overlayContainerStyle={iconStyle}
           containerStyle={{ marginLeft: width * 0.03 }}
@@ -63,6 +67,7 @@ const ProfileInfoForm = (props) =>{
       <Pressable onPress={onAvatarSubmit} style={[overlay, {display: bottomVisible ? 'flex' : 'none'}]}/>
       <BottomSheet
         isVisible={bottomVisible}
+        imageSelect={handleImageSelect}
       />
     </View>
     

@@ -10,13 +10,13 @@ const Rating = ({control, name, reviews }) =>{
                 control={control}
                 render={({field:{onChange}})=>(
                     <AirbnbRating
-                    count={9}
-                    defaultRating={1}
-                    size={20}
-                    reviews={reviews}
-                    onFinishRating={onChange}
-                    reviewSize={17}
-                    reviewColor="grey"
+                        count={9}
+                        defaultRating={1}
+                        size={20}
+                        reviews={reviews}
+                        onFinishRating={onChange}
+                        reviewSize={17}
+                        reviewColor="grey"
                     />
                 )}
             />

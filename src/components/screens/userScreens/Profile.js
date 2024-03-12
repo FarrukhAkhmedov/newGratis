@@ -1,5 +1,5 @@
 import React,{useContext, useEffect} from "react";
-import {SafeAreaView, StyleSheet, Text, View, Dimensions, Pressable, Alert} from 'react-native'
+import {SafeAreaView, StyleSheet, Text, View, Dimensions} from 'react-native'
 import { Avatar } from "@rneui/themed";
 
 import { useNavigation } from "@react-navigation/native";
@@ -15,16 +15,16 @@ let {height} = Dimensions.get('screen')
 const Profile = () =>{
   const {container, profileImageStyle, nameAndSurname, iconStyle} = styles
   const navigation = useNavigation()
-  const {store} = useContext(AuthContext)
+  const {authStore} = useContext(AuthContext)
 
   useEffect(()=>{
-    if(!store.isAuth){
+    if(!authStore.isAuth){
       navigation.navigate('Landing')
     }
-  },[store.isAuth])
+  },[authStore.isAuth])
 
   
-  const avatarUri =  `${API_URL}/profileImages/${store.userData.userProfileInfo.avatar}` 
+  const avatarUri =  `${API_URL}/profileImages/${authStore.userData.userProfileInfo.avatar}` 
 
   return(
       <SafeAreaView style={container}>
@@ -32,7 +32,7 @@ const Profile = () =>{
             <Avatar size={100} rounded source={{uri:  avatarUri }} icon={{ name: 'user', type: 'feather', color: 'rgb(150,150,150)' }} overlayContainerStyle={iconStyle} containerStyle={profileImageStyle} >
               <Avatar.Accessory size={35} onPress={()=>navigation.navigate('Editing Profile')}/>
             </Avatar>
-            <Text style={nameAndSurname}>{store.userData.userProfileInfo.userName}</Text>
+            <Text style={nameAndSurname}>{authStore.userData.userProfileInfo.userName}</Text>
         </View>
           <IconButton
             icon={'list'}
@@ -44,14 +44,14 @@ const Profile = () =>{
           />  
           <IconText
             icon={'map-pin'}
-            text={store.userData.userProfileInfo.address}
+            text={authStore.userData.userProfileInfo.address}
             size={25}
             color={'rgb(150,150,150)'}
             textSize={18}
           />
-          <IconText
-            icon={'calendar'}
-            text={`On Gratis since ${store.userData.userProfileInfo.since}`}
+          <IconButton
+            icon={'heart'}
+            text={'My wish list'}
             size={25}
             color={'rgb(150,150,150)'}
             textSize={18}

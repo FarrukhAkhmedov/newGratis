@@ -14,32 +14,31 @@ const Email = () => {
     const {control, handleSubmit} = useForm()
     const navigation = useNavigation()
     const [error, setError] = useState(null)
-    const [emailData, setEmailData] = useState(null)
-    const { store } = useContext(AuthContext)
+    const [emailData, setEmailData] = useState({})
+    const { authStore } = useContext(AuthContext)
     
     useEffect(()=>{
-        store.resetState()
+        authStore.resetState()
     }, [])
 
     useEffect(()=>{
-        setError(store.serverSideError)
-    }, [store.serverSideError])
+        setError(authStore.serverSideError)
+    }, [authStore.serverSideError])
 
     useEffect(() =>{
-        if (store.isEmailValid){
+        if (authStore.isEmailValid){
             navigation.navigate({name: 'Register', params: {email: emailData.email, password: emailData.password}})
         }
-    }, [store.isEmailValid ])
+    }, [authStore.isEmailValid])
 
     
     const onEmail = (data) => {
-        console.log(data);
-        store.register(
-            data.email
-        )
         const isValid = validation(data)
         if (isValid){
-            setEmailData(data)
+            authStore.register(
+                data.email
+            )
+            setEmailData({...data})
         }
     }
     
@@ -62,7 +61,7 @@ const Email = () => {
     
 
 
-    if (store.isLoading){
+    if (authStore.isLoading){
         return(
             <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
                 <ActivityIndicator size={height * 0.1} color={'blue'}/>

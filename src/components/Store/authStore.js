@@ -9,7 +9,7 @@ import  { API_URL } from "../context/Api"
 
 
 
-export default class Store{
+export default class AuthStore{
     isLoading = false
     userData = {
         userProfileInfo : {}
@@ -26,15 +26,18 @@ export default class Store{
     setImage(payload){
         this.image = payload
     }
-
+    
+   
     fetchStart() {
         this.isLoading = true;
     }
 
     fetchSuccess(payload) {
-        this.isLoading = false;
         this.isAuth = true;
         this.userData.userProfileInfo = payload;
+        setTimeout(()=>{
+            this.isLoading = false
+        }, 500)
     }
 
     fetchError(error) {
@@ -119,7 +122,6 @@ export default class Store{
                 }
             })
 
-    
             await AsyncStorage.setItem('userAccessToken', res.data.accessToken)
             await EncryptedStorage.setItem('userRefreshToken', res.data.refreshToken)
             this.fetchSuccess(res.data.userInfo)

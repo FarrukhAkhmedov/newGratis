@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {lazy, useContext} from 'react';
 
 import { Pressable, Dimensions } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather'
@@ -8,8 +8,8 @@ import { useNavigation } from '@react-navigation/native';
 import { AuthContext } from '../context/AuthContext';
 import {observer} from 'mobx-react-lite'
 
-import Profile from '../screens/userScreens/Profile';
-import AddForm from '../screens/userScreens/AddForm';
+const Profile = lazy(() => import('../screens/userScreens/Profile'))
+const AddForm = lazy(() => import('../screens/userScreens/AddForm'))
 import Home from '../screens/userScreens/Home';
 
 const Tab = createBottomTabNavigator()
@@ -17,12 +17,11 @@ const Tab = createBottomTabNavigator()
 let { width } = Dimensions.get('screen')
 
 const Tabs = () => {
-  const {store} = useContext(AuthContext)
+  const {authStore, postStore} = useContext(AuthContext)
   const navigation = useNavigation()
-  const {userStore} = useContext(AuthContext)
 
   const onLogout = () =>{
-    store.logout()
+    authStore.logout()
     navigation.navigate('Landing')
   }
 
@@ -34,7 +33,7 @@ const Tabs = () => {
         tabBarStyle:{
           borderTopLeftRadius:15,
           borderTopRightRadius:15,
-          display: userStore.isTabBarVisible
+          display: postStore.isTabBarVisible
         },
         headerStyle: {
           backgroundColor:'#f0f8ff'

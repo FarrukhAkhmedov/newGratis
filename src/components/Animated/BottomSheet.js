@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import {StyleSheet, Dimensions } from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -7,14 +7,12 @@ import Animated, {
 } from 'react-native-reanimated';
 import IconButton from '../CustomButtons/IconButton'
 import ImagePicker from 'react-native-image-crop-picker';
-import { AuthContext } from '../context/AuthContext';
 
 
 const { height, width } = Dimensions.get('screen');
 
-const BottomSheet = ({ isVisible }) => {
+const BottomSheet = ({ isVisible, imageSelect }) => {
   const translateY = useSharedValue(height);
-  const {store} = useContext(AuthContext)
 
   const chooseFromGalery = async () =>{
     const image = await ImagePicker.openPicker({
@@ -23,7 +21,7 @@ const BottomSheet = ({ isVisible }) => {
       cropping: true
     })
     console.log(image);
-    store.setImage(image);
+    imageSelect(image)
   }
   
   const openCmera = async () =>{
@@ -33,7 +31,7 @@ const BottomSheet = ({ isVisible }) => {
       cropping: true,
     })
       console.log(image);
-      store.setImage(image);
+      imageSelect(image)
   }
 
   const animatedSheet = useCallback(() => {
@@ -92,4 +90,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default BottomSheet;
+export default React.memo(BottomSheet)

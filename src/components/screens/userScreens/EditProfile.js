@@ -10,11 +10,11 @@ const EditProfile = () => {
   const {container} = styles
   const { control, handleSubmit } = useForm();
   const navigation = useNavigation();
-  const {store} = useContext(AuthContext)
+  const {authStore} = useContext(AuthContext)
   
   const onEditProfile = (data) => {
     const address = `${data.country}, ${data.city}, ${data.street}`
-    store.editProfileInfo(
+    authStore.editProfileInfo(
       data.userName,
       address
     )

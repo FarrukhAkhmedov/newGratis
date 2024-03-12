@@ -2,26 +2,26 @@ import $api from "../components/context/Api"
 import EncryptedStorage from 'react-native-encrypted-storage'
 
 export const checkEmail = async (email) => {
-    return $api.post(`/register`,  {email} )
+    return $api.post(`/auth/register`,  {email} )
 }
 
 export const addInfo = async (formData) =>{
-    return  $api.post(`/addInfo`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+    return  $api.post(`/auth/addInfo`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
 }
 
 export const login = async (email, password) => {
-    return $api.post(`/login`, { email, password })
+    return $api.post(`/auth/login`, { email, password })
 }
 
 export const logout = async () =>{
         const refreshToken = await EncryptedStorage.getItem('userRefreshToken')
 
-        return $api.post(`/logout`, { refreshToken: refreshToken })
+        return $api.post(`/auth/logout`, { refreshToken: refreshToken })
 
 }
 
 export const editProfileInfo = async ( formData ) =>{
-    return $api.post(`/edit`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+    return $api.post(`/auth/edit`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
         
 }
 

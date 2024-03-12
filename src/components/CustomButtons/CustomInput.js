@@ -2,30 +2,9 @@ import React from 'react';
 import {View, StyleSheet, TextInput, Dimensions, Text, TouchableOpacity} from 'react-native'
 import { Controller } from 'react-hook-form'
 import Feather from 'react-native-vector-icons/Feather'
-import { useNavigation } from '@react-navigation/native';
-
+import { withCustomInputButton } from '../../Functions/HigherOrderComponents'
 let {width, height} = Dimensions.get('screen')
 
-const withCustomInputButton = (WrappedComponent) =>{
-    return ({control, placeholder, name, header, map = {}, rules = {}, backgroundColor = {}, keyboardType = {}, secureTextEntry , borderWidth}) => {
-        const navigation = useNavigation()
-        return (
-            <WrappedComponent
-                control = {control}
-                placeholder = {placeholder}
-                name = {name}
-                header = {header}
-                map = {map}
-                rules = {rules}
-                backgroundColor = {backgroundColor}
-                keyboardType = {keyboardType}
-                secureTextEntry = {secureTextEntry}
-                borderWidth = {borderWidth}
-                navigation = {navigation}
-            />
-        )
-    }
-}
 
 const CustomInputButton = ({
     control,
