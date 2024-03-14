@@ -29,29 +29,23 @@ export const withCustomDropList = (WrappedComponent) =>{
   }
 }
 
-export const withNewAddList = (WrappedComponent) =>{
-  return ({likeButton, }) =>{
-
-  }
-
-}
-
-export const withCustomInputButton = (WrappedComponent) =>{
-  return ({control, placeholder, name, header, map = {}, rules = {}, backgroundColor = {}, keyboardType = {}, secureTextEntry , borderWidth}) => {
+export const withCustomInputButton = (WrappedComponent) => {
+  return ({ control, placeholder, name, header, map = {}, rules = {}, backgroundColor = {}, keyboardType = {}, secureTextEntry, borderWidth, multiline }) => {
       const navigation = useNavigation()
       return (
           <WrappedComponent
-              control = {control}
-              placeholder = {placeholder}
-              name = {name}
-              header = {header}
-              map = {map}
-              rules = {rules}
-              backgroundColor = {backgroundColor}
-              keyboardType = {keyboardType}
-              secureTextEntry = {secureTextEntry}
-              borderWidth = {borderWidth}
-              navigation = {navigation}
+              control={control}
+              placeholder={placeholder}
+              name={name}
+              header={header}
+              map={map}
+              rules={rules}
+              backgroundColor={backgroundColor}
+              keyboardType={keyboardType}
+              secureTextEntry={secureTextEntry} 
+              borderWidth={borderWidth}
+              navigation={navigation}
+              multiline={multiline}
           />
       )
   }

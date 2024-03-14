@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, lazy} from 'react';
+import React, {useContext, useEffect, lazy, Suspense} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { NavigationContainer } from '@react-navigation/native';
@@ -41,73 +41,75 @@ const Navigation = () => {
   
   return(
     <NavigationContainer>
-      <Stack.Navigator initialRouteName = { authStore.isAuth ? 'Home' : 'Landing' } >
-        <Stack.Screen
-          name = 'Landing'
-          component={Landing}
-          options={{
-            headerShown:false
-          }}
-        />
-        <Stack.Screen
-          name={'Email'}
-          component={Email}
-          options={{
-            headerShown:false
-          }}
-        />
-        <Stack.Screen
-          name={'Register'}
-          component={RegisterForm}
-          options={{
-            headerShown: false,
-            headerStyle: {backgroundColor:'#f0f9ff'},
-          }}
-        />
-        <Stack.Screen
-          name='Tabs'
-          component={Tabs}
-          options={{
-            headerShown:false
-          }}
-        />
-        <Stack.Screen 
-          name='MyLocationMarker' 
-          component={MyLocationMarker} 
-          options={{
-            headerShown:false
-          }}
-        />
-        <Stack.Screen
-          name='Editing Profile'
-          component={EditProfile}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name='My adds'
-          component={MyAdds}
-          options={{
-            headerShadowVisible:false,
-            headerStyle:{backgroundColor:'#f0f8ff'},
-            headerTitleAlign:'center'
-          }}
-        />
-        <Stack.Screen
-          name='Full size add'
-          component={FullSizeAdd}
-          options={{
-            headerShown:false,
-            headerStyle:{backgroundColor:'#f0f8ff'},
-            title:''
-          }}
-          sharedElements={(route) => {
-            const { id } = route.params;
-            return [{ id }];
-          }}
-        />
-      </Stack.Navigator>
+      <Suspense>
+        <Stack.Navigator initialRouteName = { authStore.isAuth ? 'Home' : 'Landing' } >
+          <Stack.Screen
+            name = 'Landing'
+            component={Landing}
+            options={{
+              headerShown:false
+            }}
+          />
+          <Stack.Screen
+            name={'Email'}
+            component={Email}
+            options={{
+              headerShown:false
+            }}
+          />
+          <Stack.Screen
+            name={'Register'}
+            component={RegisterForm}
+            options={{
+              headerShown: false,
+              headerStyle: {backgroundColor:'#f0f9ff'},
+            }}
+          />
+          <Stack.Screen
+            name='Tabs'
+            component={Tabs}
+            options={{
+              headerShown:false
+            }}
+          />
+          <Stack.Screen 
+            name='MyLocationMarker' 
+            component={MyLocationMarker} 
+            options={{
+              headerShown:false
+            }}
+          />
+          <Stack.Screen
+            name='Editing Profile'
+            component={EditProfile}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name='My adds'
+            component={MyAdds}
+            options={{
+              headerShadowVisible:false,
+              headerStyle:{backgroundColor:'#f0f8ff'},
+              headerTitleAlign:'center'
+            }}
+          />
+          <Stack.Screen
+            name='Full size add'
+            component={FullSizeAdd}
+            options={{
+              headerShown:false,
+              headerStyle:{backgroundColor:'#f0f8ff'},
+              title:''
+            }}
+            sharedElements={(route) => {
+              const { id } = route.params;
+              return [{ id }];
+            }}
+          />
+        </Stack.Navigator>
+      </Suspense>
     </NavigationContainer>
   )
 }

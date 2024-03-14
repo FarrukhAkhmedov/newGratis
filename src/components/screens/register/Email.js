@@ -90,6 +90,7 @@ const Email = () => {
                         control={control}
                         placeholder={'Password'}
                         rules={{required:'Password is required'}}
+                        secureTextEntry={true}
                     />
                     <CustomInputButton
                         backgroundColor={'#e9e9e9'}
@@ -99,6 +100,7 @@ const Email = () => {
                         control={control}
                         placeholder={'Repeat ypur password'}
                         rules={{required:'Repeat password'}}
+                        secureTextEntry={true}
                     />
                     <Text style={{color:'red', display: !!error ? 'flex' : 'none'}}>{error}</Text>
                 </View>

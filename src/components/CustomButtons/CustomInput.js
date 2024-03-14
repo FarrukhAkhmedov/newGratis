@@ -17,7 +17,8 @@ const CustomInputButton = ({
     keyboardType = {},
     secureTextEntry,
     navigation,
-    borderWidth
+    borderWidth,
+    multiline
 }) => {
     const {textInputContainerStyle, CustomInputButton, headerStyle} = styles
     return (
@@ -30,8 +31,8 @@ const CustomInputButton = ({
                 render={({field: {value, onChange, onBlur}, fieldState:{error}}) =>(
                     <>
                         <View style={[textInputContainerStyle,{borderColor: error ? 'red' : 'black', backgroundColor: backgroundColor, borderWidth: borderWidth}]}>
-                            <TextInput 
-                                multiline
+                            <TextInput
+                                multiline={multiline}
                                 onChangeText={onChange}
                                 onBlur={onBlur}
                                 value={value}
@@ -86,4 +87,4 @@ const styles = StyleSheet.create(
     }
 )
 
-export default withCustomInputButton(CustomInputButton)
+export default React.memo(withCustomInputButton(CustomInputButton))

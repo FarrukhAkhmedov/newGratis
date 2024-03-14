@@ -14,6 +14,7 @@ const { height, width } = Dimensions.get('screen');
 const BottomSheet = ({ isVisible, imageSelect }) => {
   const translateY = useSharedValue(height);
 
+
   const chooseFromGalery = async () =>{
     const image = await ImagePicker.openPicker({
       width: 300,

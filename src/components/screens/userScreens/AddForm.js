@@ -91,6 +91,7 @@ const AddForm = () => {
             placeholder='Was published in 1597, got some coffe stains...'
             header='Description'
             rules={{required:'Description is required'}}
+            multiline={true}
           />
           <CustomMultipleSelect
             name='objectType'
