@@ -1,7 +1,11 @@
-<h1>newGratis - charity app</h1>
+<h1>newGratis app</h1>
 
 <h2>Description</h2>
  newGratis is a simple app, designed in order to give people platform for sharing unnecessary items.
+<br />
+
+<h2>Attention!</h2>
+ If you are going to test this app, please, set IP of your backend server in newGratis/src/components/context/Api
 <br />
 
 
